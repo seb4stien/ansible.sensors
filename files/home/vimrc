@@ -1,0 +1,132 @@
+" File organisation
+"   1. Vundle plugin manager
+"   2. Plugin specific configurations
+"   3. Global behaviour
+"   4. Global shortcuts
+"   5. Filetypes specific configurations
+
+
+"
+" 1. Vundle plugin manager
+"
+set nocompatible                           " required by vundle
+filetype off                               " required by vundle
+
+set runtimepath+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'itchyny/lightline.vim'             " light status bar
+Plugin 'itchyny/vim-gitbranch'             " to display git branch in status bar
+Plugin 'scrooloose/nerdtree'               " file navigator
+Plugin 'Xuyuanp/nerdtree-git-plugin'       " show git status in file nerdtree
+Plugin 'ap/vim-buftabline'                 " show buffers on top
+call vundle#end()
+"
+" /Vundle plugin manager
+"
+
+
+"
+" 2. Plugin speficic configurations
+"
+
+" nerdtree-git-plugin
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "m",
+    \ "Staged"    : "s",
+    \ "Untracked" : "u",
+    \ "Renamed"   : "r",
+    \ "Unmerged"  : "u",
+    \ "Deleted"   : "x",
+    \ "Dirty"     : "d",
+    \ "Clean"     : "c",
+    \ 'Ignored'   : 'i',
+    \ "Unknown"   : "?"
+    \ }
+" /nerdtree-git-plugin
+
+
+" lightline
+set laststatus=2
+let g:lightline = {
+      \ 'colorscheme': 'powerline',
+      \ 'active': {
+      \   'left': [ [ 'paste' ],
+      \             [ 'gitbranch' ],
+      \             [ 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name'
+      \ },
+      \ }
+
+if !has('gui_running')
+  set t_Co=256
+endif
+" /lightline
+
+
+" tabline
+let g:buftabline_show=1     " only if >1 buffer
+let g:buftabline_numbers=2  " ordinal number
+" /tabline
+
+"
+" /Plugin speficic configurations
+"
+
+
+"
+" 3. Global behabiour
+"
+set bg=dark
+set modeline
+set hlsearch
+set hidden                     " allow navigation through unwritten buffers
+syntax on
+filetype plugin indent on
+set autoindent
+
+" https://stackoverflow.com/questions/2902048/vim-save-a-list-of-open-files-and-later-open-all-files
+autocmd VimLeave * mksession! ~/.vim/shutdown_session.vim
+command Rss :source ~/.vim/shutdown_session.vim
+" autocmd VimEnter source ~/.vim/shutdown_session.vim<CR>
+command Ss :mksession! ~/.vim/manual_session.vim
+command Rs :source ~/.vim/manual_session.vim
+" /behavior
+
+"
+" /3. Global behabiour
+"
+
+
+"
+" 4. Filetypes specific configurations
+"
+"
+" /4. Filetypes specific configurations
+"
+
+
+
+" 5. Shortcuts
+"
+map <silent> <F3> :NERDTreeToggle<CR>      " display file navigator
+
+" buftabline
+nmap & <Plug>BufTabLine.Go(1)
+nmap é <Plug>BufTabLine.Go(2)
+nmap " <Plug>BufTabLine.Go(3)
+nmap ' <Plug>BufTabLine.Go(4)
+" /buftabline
+
+
+map <F10> :w<CR>:!'%:p'<CR>                " execute current script
+
+" git
+nmap c :!git commit %<CR>
+command GC !git commit % -m "<args>"
+" /git
+
+" /shortcuts
+"

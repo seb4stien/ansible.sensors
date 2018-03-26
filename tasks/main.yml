@@ -1,0 +1,39 @@
+- name: Install pyrfxcom
+  git:
+    repo: https://github.com/barnybug/pyrfxcom.git
+    dest: /opt/sensors/pyrfxcom
+    force: yes
+
+- name: Patch pyrfxcom for my sensors
+  patch:
+    src: files/pyrfxcom.patch
+    basedir: /opt/sensors/pyrfxcom/
+
+- name: Copy collect script
+  copy:
+    src: files/sensors.py
+    dest: /opt/sensors/sensors.py
+    mode: u=rwx,g=rx,o=rx
+
+- name: Link to pyrfxcom
+  file:
+    src: /opt/sensors/pyrfxcom/rfxcom
+    dest: /opt/sensors/rfxcom
+    state: link
+
+- name: Copy systemd unit file
+  copy:
+    src: files/my-sensors.service
+    dest: /lib/systemd/system/
+
+- name: Create data dir
+  file:
+    path: /srv/sensors/
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: my-sensors

@@ -1,0 +1,12 @@
+[Unit]
+Description=Sensors
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /opt/sensors/sensors.py
+TimeoutStopSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
